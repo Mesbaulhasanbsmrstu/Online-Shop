@@ -36,4 +36,21 @@
     </div>
 </div>
 
+@section scripts{ 
+    <script src="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
+    <script type="text/javascript">
+    $(function () {
+        var save = '@TempData["save"]'
+        var edit='@TempData["update"]'
+        if ( '@TempData["save"]') {
+            alertify.success('@TempData["save"]');
+        }
+        if ('@TempData["update"]') {
+            alertify.success('@TempData["update"]');
+        }
+    })
+    </script>
+
+}
+
 

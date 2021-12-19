@@ -9,17 +9,17 @@ using System.Threading.Tasks;
 namespace Online_Shop.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    public class ProductTypesController : Controller
+    public class SpecialTagsController : Controller
     {
         ApplicationDbContext _db;
-
-        public ProductTypesController(ApplicationDbContext db)
+        public SpecialTagsController(ApplicationDbContext db)
         {
             _db = db;
         }
         public IActionResult Index()
         {
-            return View(_db.ProdctTypes.ToList());
+
+            return View(_db.SpecialTags.ToList());
         }
 
         //Create get Action method
@@ -33,32 +33,30 @@ namespace Online_Shop.Areas.Admin.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
 
-        public async Task<IActionResult> Create(ProductTypes productTypes)
+        public async Task<IActionResult> Create(SpecialTag specialTags)
         {
-            if(ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                _db.ProdctTypes.Add(productTypes);
+                _db.SpecialTags.Add(specialTags);
                 await _db.SaveChangesAsync();
-                TempData["save"] = "Product type has been saved";
                 return RedirectToAction(nameof(Index));
             }
-            return View(productTypes);
+            return View(specialTags);
         }
-
 
         //Create edit Action method
         public ActionResult Edit(int? id)
         {
-            if(id==null)
+            if (id == null)
             {
                 return NotFound();
             }
-            var productType = _db.ProdctTypes.Find(id);
-            if(productType==null)
+            var specialTag = _db.SpecialTags.Find(id);
+            if (specialTag == null)
             {
                 return NotFound();
             }
-            return View(productType);
+            return View(specialTag);
         }
 
         //edit post Action Method
@@ -66,16 +64,15 @@ namespace Online_Shop.Areas.Admin.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
 
-        public async Task<IActionResult> Edit(ProductTypes productTypes)
+        public async Task<IActionResult> Edit(SpecialTag specialTags)
         {
             if (ModelState.IsValid)
             {
-                _db.Update(productTypes);
+                _db.Update(specialTags);
                 await _db.SaveChangesAsync();
-                TempData["update"] = "Product type has been edited";
                 return RedirectToAction(nameof(Index));
             }
-            return View(productTypes);
+            return View(specialTags);
         }
 
         //Create details Action method
@@ -85,12 +82,12 @@ namespace Online_Shop.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-            var productType = _db.ProdctTypes.Find(id);
-            if (productType == null)
+            var specialTag = _db.SpecialTags.Find(id);
+            if (specialTag == null)
             {
                 return NotFound();
             }
-            return View(productType);
+            return View(specialTag);
         }
 
         //details post Action Method
@@ -98,7 +95,7 @@ namespace Online_Shop.Areas.Admin.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
 
-        public IActionResult Details(ProductTypes productTypes)
+        public IActionResult Details(SpecialTag specialTags)
         {
             return RedirectToAction(nameof(Index));
 
@@ -111,12 +108,12 @@ namespace Online_Shop.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-            var productType = _db.ProdctTypes.Find(id);
-            if (productType == null)
+            var specialTag = _db.SpecialTags.Find(id);
+            if (specialTag == null)
             {
                 return NotFound();
             }
-            return View(productType);
+            return View(specialTag);
         }
 
         //delete post Action Method
@@ -124,30 +121,29 @@ namespace Online_Shop.Areas.Admin.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
 
-        public async Task<IActionResult> Delete(int id,ProductTypes productTypes)
+        public async Task<IActionResult> Delete(int id, SpecialTag specialTags)
         {
-            if(id==null)
+            if (id == null)
             {
                 return NotFound();
             }
-            if(id!=productTypes.Id)
+            if (id != specialTags.Id)
             {
                 return NotFound();
             }
-            var productType = _db.ProdctTypes.Find(id);
-            if (productType == null)
+            var specialTag = _db.SpecialTags.Find(id);
+            if (specialTag == null)
             {
                 return NotFound();
             }
             if (ModelState.IsValid)
             {
-                _db.Remove(productType);
+                _db.Remove(specialTag);
                 await _db.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(productTypes);
+            return View(specialTags);
 
         }
-
     }
 }
