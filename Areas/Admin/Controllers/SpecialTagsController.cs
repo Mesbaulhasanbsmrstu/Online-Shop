@@ -39,6 +39,7 @@ namespace Online_Shop.Areas.Admin.Controllers
             {
                 _db.SpecialTags.Add(specialTags);
                 await _db.SaveChangesAsync();
+                TempData["save"] = "Tag has been saved";
                 return RedirectToAction(nameof(Index));
             }
             return View(specialTags);
@@ -70,6 +71,7 @@ namespace Online_Shop.Areas.Admin.Controllers
             {
                 _db.Update(specialTags);
                 await _db.SaveChangesAsync();
+                TempData["update"] = "Tag has been edited";
                 return RedirectToAction(nameof(Index));
             }
             return View(specialTags);
@@ -140,6 +142,7 @@ namespace Online_Shop.Areas.Admin.Controllers
             {
                 _db.Remove(specialTag);
                 await _db.SaveChangesAsync();
+                TempData["delete"] = "Tag has been deleted";
                 return RedirectToAction(nameof(Index));
             }
             return View(specialTags);

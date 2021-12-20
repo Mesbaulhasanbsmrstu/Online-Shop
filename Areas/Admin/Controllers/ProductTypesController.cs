@@ -143,6 +143,7 @@ namespace Online_Shop.Areas.Admin.Controllers
             {
                 _db.Remove(productType);
                 await _db.SaveChangesAsync();
+                TempData["delete"] = "Product type has been deleted";
                 return RedirectToAction(nameof(Index));
             }
             return View(productTypes);
