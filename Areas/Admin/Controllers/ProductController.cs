@@ -13,28 +13,29 @@ using System.Threading.Tasks;
 
 namespace Online_Shop.Areas.Admin.Controllers
 {
+
     [Area("Admin")]
 
     public class ProductController : Controller
     {
-      private  ApplicationDbContext _db;
+        private ApplicationDbContext _db;
         private IHostingEnvironment _he;
 
 
-        public ProductController(ApplicationDbContext db,IHostingEnvironment he)
+        public ProductController(ApplicationDbContext db, IHostingEnvironment he)
         {
             _db = db;
             _he = he;
         }
         public IActionResult Index()
         {
-            return View(_db.Products.Include(c=>c.ProductTypes).Include(f=>f.SpecialTag).ToList());
+            return View(_db.Products.Include(c => c.ProductTypes).Include(f => f.SpecialTag).ToList());
         }
 
         //Create get Action method
         public IActionResult Create()
         {
-            ViewData["productTypeId"] = new SelectList(_db.ProdctTypes.ToList(),"Id","ProductType");
+            ViewData["productTypeId"] = new SelectList(_db.ProdctTypes.ToList(), "Id", "ProductType");
             ViewData["TagId"] = new SelectList(_db.SpecialTags.ToList(), "Id", "Tag");
             return View();
         }
@@ -48,11 +49,15 @@ namespace Online_Shop.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                if(image!=null)
+                if (image != null)
                 {
                     var name = Path.Combine(_he.WebRootPath + "/images", Path.GetFileName(image.FileName));
                     await image.CopyToAsync(new FileStream(name, FileMode.Create));
                     products.Image = "images/" + image.FileName;
+                }
+                if(image==null)
+                {
+                    products.Image = "images/noimage.PNG" ;
                 }
                 _db.Products.Add(products);
                 await _db.SaveChangesAsync();
@@ -60,6 +65,113 @@ namespace Online_Shop.Areas.Admin.Controllers
                 return RedirectToAction(nameof(Index));
             }
             return View(products);
+        }
+
+        //Create edit Action method
+        public ActionResult Edit(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            ViewData["productTypeId"] = new SelectList(_db.ProdctTypes.ToList(), "Id", "ProductType");
+            ViewData["TagId"] = new SelectList(_db.SpecialTags.ToList(), "Id", "Tag");
+            var product = _db.Products.Include(c=>c.ProductTypes).Include(f=>f.SpecialTag).FirstOrDefault(c=>c.Id==id);
+            if (product == null)
+            {
+                return NotFound();
+            }
+            return View(product);
+        }
+
+        //edit post Action Method
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+
+        public async Task<IActionResult> Edit(Products products, IFormFile image)
+        {
+            if (ModelState.IsValid)
+            {
+                if (image != null)
+                {
+                    var name = Path.Combine(_he.WebRootPath + "/images", Path.GetFileName(image.FileName));
+                    await image.CopyToAsync(new FileStream(name, FileMode.Create));
+                    products.Image = "images/" + image.FileName;
+                }
+                if (image == null)
+                {
+                    products.Image = "images/noimage.PNG";
+                }
+                _db.Products.Update(products);
+                await _db.SaveChangesAsync();
+                TempData["save"] = "Product  has been Edited";
+                return RedirectToAction(nameof(Index));
+            }
+            return View(products);
+        }
+
+        //Create details Action method
+        public ActionResult Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var product = _db.Products.Include(c => c.ProductTypes).Include(f => f.SpecialTag).FirstOrDefault(c => c.Id == id);
+            if (product == null)
+            {
+                return NotFound();
+            }
+            return View(product);
+        }
+
+        //Create delete Action method
+        public ActionResult Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var product = _db.Products.Include(c => c.ProductTypes).Include(f => f.SpecialTag).FirstOrDefault(c => c.Id == id);
+            if (product == null)
+            {
+                return NotFound();
+            }
+            return View(product);
+        }
+
+        //delete post Action Method
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+
+        public async Task<IActionResult> Delete(int id, Products products)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            if (id != products.Id)
+            {
+                return NotFound();
+            }
+            var product = _db.Products.Include(c => c.ProductTypes).Include(f => f.SpecialTag).Where(c => c.Id == id);
+            if (product == null)
+            {
+                return NotFound();
+            }
+            if (ModelState.IsValid)
+            {
+                _db.Remove(product);
+                await _db.SaveChangesAsync();
+                TempData["delete"] = "Product  has been deleted";
+                return RedirectToAction(nameof(Index));
+            }
+            return View(product);
+
         }
     }
 }

@@ -16,6 +16,7 @@ namespace Online_Shop.Data
         public DbSet<ProductTypes> ProdctTypes { get; set; }
         public DbSet<SpecialTag> SpecialTags { get; set; }
         public DbSet<Products> Products { get; set; }
+        
       
     }
 }
