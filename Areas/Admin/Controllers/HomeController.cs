@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Online_Shop.Data;
 using Online_Shop.Models;
 using System;
 using System.Collections.Generic;
@@ -11,9 +13,14 @@ namespace Online_Shop.Controllers
     [Area("Admin")]
     public class HomeController : Controller
     {
+        ApplicationDbContext _db;
+        public HomeController(ApplicationDbContext db)
+        {
+            _db = db;
+        }
         public IActionResult Index()
         {
-            return View();
+            return View(_db.Products.Include(c => c.ProductTypes).Include(f => f.SpecialTag).ToList());
         }
 
         public IActionResult About()
@@ -40,5 +47,22 @@ namespace Online_Shop.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
+        //Create details Action method
+        public ActionResult Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var product = _db.Products.Include(c => c.ProductTypes).Include(f => f.SpecialTag).FirstOrDefault(c => c.Id == id);
+            if (product == null)
+            {
+                return NotFound();
+            }
+            return View(product);
+        }
+
     }
 }

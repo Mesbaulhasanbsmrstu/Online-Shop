@@ -32,6 +32,15 @@ namespace Online_Shop.Areas.Admin.Controllers
             return View(_db.Products.Include(c => c.ProductTypes).Include(f => f.SpecialTag).ToList());
         }
 
+        //post action index method
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Index(decimal lowAmount,decimal largeAmount)
+        {
+            var products = _db.Products.Include(c => c.ProductTypes).Include(f => f.SpecialTag).Where(c => c.Price >= lowAmount && c.Price <= largeAmount).ToList();
+            return View(products);
+        }
+
         //Create get Action method
         public IActionResult Create()
         {
@@ -49,6 +58,14 @@ namespace Online_Shop.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
+                var searchProduct = _db.Products.FirstOrDefault(c => c.Name == products.Name);
+                if(searchProduct!=null)
+                {
+                    ViewBag.message = "This Product is Already Exist";
+                    ViewData["productTypeId"] = new SelectList(_db.ProdctTypes.ToList(), "Id", "ProductType");
+                    ViewData["TagId"] = new SelectList(_db.SpecialTags.ToList(), "Id", "Tag");
+                    return View(products);
+                }
                 if (image != null)
                 {
                     var name = Path.Combine(_he.WebRootPath + "/images", Path.GetFileName(image.FileName));
@@ -93,6 +110,16 @@ namespace Online_Shop.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
+                var searchProduct = _db.Products.FirstOrDefault(c => c.Name == products.Name);
+                var product = _db.Products.Where(c => c.Name == products.Name).ToList();
+                int number = product.Count();
+                if (searchProduct!=null)
+                {
+                    ViewBag.message = "This Product is Already Exist";
+                    ViewData["productTypeId"] = new SelectList(_db.ProdctTypes.ToList(), "Id", "ProductType");
+                    ViewData["TagId"] = new SelectList(_db.SpecialTags.ToList(), "Id", "Tag");
+                    return View(products);
+                }
                 if (image != null)
                 {
                     var name = Path.Combine(_he.WebRootPath + "/images", Path.GetFileName(image.FileName));
@@ -105,7 +132,7 @@ namespace Online_Shop.Areas.Admin.Controllers
                 }
                 _db.Products.Update(products);
                 await _db.SaveChangesAsync();
-                TempData["save"] = "Product  has been Edited";
+                TempData["update"] = "Product  has been Edited";
                 return RedirectToAction(nameof(Index));
             }
             return View(products);
