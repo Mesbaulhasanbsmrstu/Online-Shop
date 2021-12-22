@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -65,11 +66,20 @@ namespace Online_Shop
 
             app.UseMvc(routes =>
             {
+            
+             
                 routes.MapRoute(
-                  name: "areas",
+              name: "areas",
 
-                  template: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
-                );
+              template: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
+ 
+            );
+                routes.MapAreaRoute(
+       name: "default",
+       areaName: "Customer",
+       template: "{controller=Home}/{action=Index}/{id?}");
+
+
 
             });
 
