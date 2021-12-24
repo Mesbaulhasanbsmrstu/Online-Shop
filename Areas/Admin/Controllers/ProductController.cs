@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore;
 using Online_Shop.Data;
 using Online_Shop.Models;
 using System;
@@ -98,6 +99,13 @@ namespace Online_Shop.Areas.Admin.Controllers
             {
                 return NotFound();
             }
+            var fullPath = _he.WebRootPath + product.Image;
+
+            if (System.IO.File.Exists(fullPath))
+            {
+                System.IO.File.Delete(fullPath);
+            
+            }
             return View(product);
         }
 
@@ -162,7 +170,7 @@ namespace Online_Shop.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var product = _db.Products.Include(c => c.ProductTypes).Include(f => f.SpecialTag).FirstOrDefault(c => c.Id == id);
+            var product = _db.Products.Include(c => c.ProductTypes).Include(f => f.SpecialTag).Where(c => c.Id == id).FirstOrDefault();
             if (product == null)
             {
                 return NotFound();
@@ -174,30 +182,26 @@ namespace Online_Shop.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-
-        public async Task<IActionResult> Delete(int id, Products products)
+        [ActionName("Delete")]
+        public async Task<IActionResult> DeleteConfirm(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
-            if (id != products.Id)
-            {
-                return NotFound();
-            }
-            var product = _db.Products.Include(c => c.ProductTypes).Include(f => f.SpecialTag).Where(c => c.Id == id);
+//var product = _db.Products.FirstOrDefault(c => c.Id == id);
+            // var product=_db.Products.Find(id);
+            var product = _db.Products.Include(c => c.ProductTypes).Include(f => f.SpecialTag).Where(c => c.Id == id).FirstOrDefault();
             if (product == null)
             {
                 return NotFound();
             }
-            if (ModelState.IsValid)
-            {
-                _db.Remove(product);
+        _db.Remove(product);
                 await _db.SaveChangesAsync();
                 TempData["delete"] = "Product  has been deleted";
                 return RedirectToAction(nameof(Index));
-            }
-            return View(product);
+            
+           
 
         }
     }
