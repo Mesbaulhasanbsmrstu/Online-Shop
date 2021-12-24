@@ -110,16 +110,16 @@ namespace Online_Shop.Areas.Admin.Controllers
         {
             if (ModelState.IsValid)
             {
-                var searchProduct = _db.Products.FirstOrDefault(c => c.Name == products.Name);
+                /*var searchProduct = _db.Products.FirstOrDefault(c => c.Name == products.Name);
                 var product = _db.Products.Where(c => c.Name == products.Name).ToList();
-                int number = product.Count();
-                if (searchProduct!=null)
+                int number = product.Count();*/
+               /* if (searchProduct!=null)
                 {
                     ViewBag.message = "This Product is Already Exist";
                     ViewData["productTypeId"] = new SelectList(_db.ProdctTypes.ToList(), "Id", "ProductType");
                     ViewData["TagId"] = new SelectList(_db.SpecialTags.ToList(), "Id", "Tag");
                     return View(products);
-                }
+                }*/
                 if (image != null)
                 {
                     var name = Path.Combine(_he.WebRootPath + "/images", Path.GetFileName(image.FileName));
