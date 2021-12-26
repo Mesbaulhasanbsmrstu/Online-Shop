@@ -49,13 +49,13 @@
         <a asp-action="Index" asp-controller="Home" class="btn btn-success">Back to Home</a>
     </div>
     <div class="col-md-6 text-right">
-        <h3>
+        <h2>
             Total Amount
-        </h3>
-        <h3>
+        </h2>
+        <h2>
             Grant Total: @Model.Sum(c => c.Price)
-        </h3>
-        <a asp-action="Index" asp-controller="Home" class="btn btn-success">CheckOut</a>
+        </h2>
+        <a asp-area="Customer" asp-action="CheckOut" asp-controller="Order" class="btn btn-success">CheckOut</a>
     </div>
 
 </div>

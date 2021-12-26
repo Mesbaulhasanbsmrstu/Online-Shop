@@ -16,6 +16,8 @@ namespace Online_Shop.Data
         public DbSet<ProductTypes> ProdctTypes { get; set; }
         public DbSet<SpecialTag> SpecialTags { get; set; }
         public DbSet<Products> Products { get; set; }
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<OrderDetails> OrderDetails { get; set; }
 
         internal object MapPath(object p)
         {
