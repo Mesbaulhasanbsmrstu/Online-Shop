@@ -1,0 +1,62 @@
+﻿@using Online_Shop.Models
+@model List<Products>
+@{
+    ViewData["Title"] = "Cart";
+}
+
+<h2 style="text-align: center; vertical-align: middle;">Your Cart</h2>
+</br>
+
+
+    <div class="row">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th style="text-align: center; vertical-align: middle;">Image</th>
+                    <th style="text-align: center; vertical-align: middle;">Name</th>
+                    <th style="text-align: center; vertical-align: middle;">Price</th>
+                    <th style="text-align: center; vertical-align: middle;">Product Type</th>
+                    <th style="text-align: center; vertical-align: middle;">Color</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td style="text-align: center; vertical-align: middle;">
+                            <img src="~/@item.Image" height="100px" width="200px" />
+                        </td>
+                        <td style="text-align: center; vertical-align: middle;">@item.Name</td>
+                        <td style="text-align: center; vertical-align: middle;">@item.Price</td>
+                        <td style="text-align: center; vertical-align: middle;">@item.ProductTypes.ProductType</td>
+                        <td style="text-align: center; vertical-align: middle;">@item.ProductColor</td>
+                        <td style="text-align: center; vertical-align: middle;">
+                            <div class="btn-group">
+                                <a asp-area="Customer" asp-action="Remove" asp-controller="Home" asp-route-id="@item.Id" class="btn btn-danger">Remove </a>
+
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+
+        </table>
+       </div>
+
+<div class="row">
+    <div class="col-md-6">
+        <a asp-action="Index" asp-controller="Home" class="btn btn-success">Back to Home</a>
+    </div>
+    <div class="col-md-6 text-right">
+        <h3>
+            Total Amount
+        </h3>
+        <h3>
+            Grant Total: @Model.Sum(c => c.Price)
+        </h3>
+        <a asp-action="Index" asp-controller="Home" class="btn btn-success">CheckOut</a>
+    </div>
+
+</div>
+

@@ -1,4 +1,17 @@
-﻿<!DOCTYPE html>
+﻿@using System.Net.Http
+@using Online_Shop.Utility
+@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor 
+@{
+    int count=0;
+    List<Products> products = HttpContextAccessor.HttpContext.Session.Get <List<Products>>("products");
+    if(products==null)
+    {
+        products = new List<Products>();
+    }
+    count = products.Count();
+            }
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -23,26 +36,24 @@
 <body>
     <nav class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">Online_Shop</a>
-                <a asp-area="" asp-controller="Home" asp-action="About">&nbsp About</a>
-                <a asp-area="" asp-controller="Home" asp-action="Contact">&nbsp Contact</a>
-                <a asp-area="Identity" asp-page="/Account/Register">&nbsp &nbsp &nbsp Register</a>
-                <a asp-area="Identity" asp-page="/Account/Login">&nbsp Login</a>
-            </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                  
-                    <li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
-                    <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
-                </ul>
+
+            @*<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>*@
+            <a asp-area="Customer" asp-controller="Home" asp-action="Index" class="navbar-brand">Online_Shop</a>
+
+            <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
+
+
                 <partial name="_LoginPartial" />
+                <a class="navbar-brand " asp-area="" asp-controller="Home" asp-action="About">About</a>
+                <a class="navbar-brand " asp-area="" asp-controller="Home" asp-action="Contact">Contact</a>
+                <a class="navbar-brand " asp-area="Customer" asp-controller="Home" asp-action="Cart">Cart(@count)</a>
+
+
             </div>
         </div>
     </nav>
